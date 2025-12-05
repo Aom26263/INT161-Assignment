@@ -4,3 +4,4 @@
 # npm install @prisma/client
 # npx prisma init
 DATABASE_URL="mysql://root:mysql%40sit@localhost:3306/db_67130500044"
+วิธี pull npx prisma db pull
