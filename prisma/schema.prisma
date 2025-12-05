@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Courses {
+  id          Int             @id @default(autoincrement())
+  subject_id  Int             @db.Int
+  year        Int             @db.Year
+  // Relations
+  subject     Subjects        @relation(fields: [subject_id], references: [id])
+  enrollments CourseStudent[]
+
+  @@unique([id], name: "courses_id_key")
+  @@index([subject_id], name: "idx_fk_subject_id")
+  @@map("courses")
+}
+
+model Students {
+  id          Int             @id @default(autoincrement())
+  name        String          @db.VarChar(40)
+  enrollments CourseStudent[]
+
+  @@unique([id], name: "students_id_key")
+  @@map("students")
+}
+
+model CourseStudent {
+  course_id  Int
+  student_id Int
+  grade      Float    @db.Double
+  // Relations
+  course     Courses  @relation(fields: [course_id], references: [id])
+  student    Students @relation(fields: [student_id], references: [id])
+
+  @@id([course_id, student_id])
+  @@index([course_id], name: "idx_fk_course_id")
+  @@index([student_id], name: "idx_fk_student_id")
+  @@map("course_student")
+}
+
+model Subjects {
+  id           Int       @id @default(autoincrement())
+  subject_code String    @db.Char(6)
+  title        String    @db.VarChar(40)
+  credit       Float     @default(3) @db.Double
+  courses      Courses[]
+
+  @@unique([id], name: "subjects_id_key")
+  @@unique([subject_code], name: "subjects_subject_code_key")
+  @@map("subjects")
+}
