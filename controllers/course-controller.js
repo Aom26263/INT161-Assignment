@@ -27,7 +27,9 @@ export async function getCoursesBySubjectId(req, res) {
 
 export async function addNewCourse(req, res) {
     try {
-        const { subjectId, year } = req.body;
+        const { subjectId, year } = req.body; //อันนี้มันรับที่ body ใน postman
+        //const studentId = parseInt(req.params.studentId); รับที่ parameter ใน postman
+        //const grades = parseFloat(req.body.grade); รับที่ body ใน postman
 
         if (!subjectId || !year) {
             return res.status(400).json({
